@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: jenkins-persistent
+    template: jenkins-persistent-template
+  name: jenkins
+spec:
+  ports:
+  - name: web
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    name: jenkins
+  sessionAffinity: None
+  type: ClusterIP

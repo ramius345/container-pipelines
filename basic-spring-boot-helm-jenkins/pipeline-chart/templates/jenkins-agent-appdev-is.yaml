@@ -1,0 +1,9 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: jenkins-agent-appdev
+  name: jenkins-agent-appdev
+spec:
+  lookupPolicy:
+    local: false
