@@ -25,7 +25,7 @@ spec:
       containers:
       - env:
         - name: OPENSHIFT_ENABLE_OAUTH
-          value: "false"
+          value: "true"
         - name: OPENSHIFT_ENABLE_REDIRECT_PROMPT
           value: "true"
         - name: DISABLE_ADMINISTRATIVE_MONITORS

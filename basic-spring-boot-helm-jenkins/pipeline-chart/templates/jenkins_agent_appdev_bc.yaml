@@ -1,5 +1,5 @@
-apiVersion: build.openshift.io/v1
-kind: BuildConfig
+kind: "BuildConfig"
+apiVersion: "build.openshift.io/v1"
 metadata:
   labels:
     build: jenkins-agent-appdev
