@@ -1,0 +1,42 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: {{ Values.projectname }}-dev
+  name: demo
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: demo:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: environment_vars
+      uri: https://github.com/ramius345/hello-world-springboot
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: java:8
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: xmfdavY0kAifpe5wQg7E
+    type: GitHub
+  - generic:
+      secret: A6EltsAVwJF5HB2mR6Ta
+    type: Generic
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/openshift/java@sha256:6e57efae4828dbae77e18f12d2d3691df959e344fcd87e91ec38e03c5aec5f98
+    type: ImageChange
+status:
+  lastVersion: 2

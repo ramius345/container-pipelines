@@ -1,0 +1,30 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: "2020-01-29T15:54:26Z"
+  generation: 1
+  labels:
+    app: demoapp-dev
+  name: demo
+  namespace: test-template
+  resourceVersion: "2595458"
+  selfLink: /apis/image.openshift.io/v1/namespaces/test-template/imagestreams/demo
+  uid: 393546e7-7667-4d21-a510-d506ceeea2fc
+spec:
+  lookupPolicy:
+    local: false
+status:
+  dockerImageRepository: image-registry.openshift-image-registry.svc:5000/test-template/demo
+  tags:
+  - items:
+    - created: "2020-01-29T16:08:01Z"
+      dockerImageReference: image-registry.openshift-image-registry.svc:5000/test-template/demo@sha256:adfec49832dc5d30bfe2e84a6696eb1223f7afc06790d38d8b7a0f193d860f65
+      generation: 1
+      image: sha256:adfec49832dc5d30bfe2e84a6696eb1223f7afc06790d38d8b7a0f193d860f65
+    - created: "2020-01-29T15:58:13Z"
+      dockerImageReference: image-registry.openshift-image-registry.svc:5000/test-template/demo@sha256:90837b845e8f7d14a7c21f71239b5f8e8b9605c00647d724437e2749433da732
+      generation: 1
+      image: sha256:90837b845e8f7d14a7c21f71239b5f8e8b9605c00647d724437e2749433da732
+    tag: latest

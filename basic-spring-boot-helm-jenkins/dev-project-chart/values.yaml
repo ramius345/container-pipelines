@@ -1,0 +1,6 @@
+projectname: helloworld
+jenkins:
+  pipeline_project: jenkins-test-2
+git:
+  repo: https://github.com/ramius345/hello-world-springboot
+  ref: jenkins_pipeline
