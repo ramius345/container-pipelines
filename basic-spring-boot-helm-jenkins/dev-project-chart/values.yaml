@@ -4,3 +4,6 @@ jenkins:
 git:
   repo: https://github.com/ramius345/hello-world-springboot
   ref: jenkins_pipeline
+imagestream:
+  name: java:8
+  namespace: openshift

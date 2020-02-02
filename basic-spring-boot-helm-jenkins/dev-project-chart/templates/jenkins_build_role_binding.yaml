@@ -10,4 +10,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: jenkins
-  namespace: {{ Value.jenkins.pipeline_project }}
+  namespace: {{ .Values.jenkins.pipeline_project }}
