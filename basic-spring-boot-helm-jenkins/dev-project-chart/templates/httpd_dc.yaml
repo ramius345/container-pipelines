@@ -28,6 +28,16 @@ spec:
     spec:
       containers:
       - image: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/{{ .Values.projectname }}-httpd:latest
+        command:
+          - /usr/bin/scl
+          - enable
+          - httpd24
+          - --
+          - /opt/rh/httpd24/root/usr/sbin/httpd
+          - -D
+          - FOREGROUND
+          - -f
+          - /etc/httpd/customconf/httpd.conf
         imagePullPolicy: Always
         name: {{ .Values.projectname }}-httpd
         ports:
@@ -38,6 +48,13 @@ spec:
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
+        volumeMounts:
+          - name: httpd-conf
+            mountPath: /etc/httpd/customconf
+      volumes:
+        - name: httpd-conf
+          configMap:
+            name: {{ .Values.projectname }}-httpd-config
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
