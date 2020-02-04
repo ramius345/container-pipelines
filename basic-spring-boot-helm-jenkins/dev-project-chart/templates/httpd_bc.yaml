@@ -1,0 +1,30 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: {{ .Values.projectname }}-httpd-dev
+  name: {{ .Values.projectname }}-httpd
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: {{ .Values.projectname }}-httpd:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: httpd:latest
+        namespace: openshift
+    type: Binary
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - generic:
+      secret: A6EltsAVwJF5HB2mR6Ta
+    type: Generic
+  - type: ConfigChange
+
