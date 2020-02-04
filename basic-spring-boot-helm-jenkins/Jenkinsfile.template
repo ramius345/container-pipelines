@@ -3,6 +3,7 @@ def pipelineProject = "<JENKINS_PROJECT>"
 def devProject = "<DEV_PROJECT>"
 def testProject = "<TEST_PROJECT>"
 
+
 pipeline {
     environment { 
         // Maven Command
@@ -68,7 +69,7 @@ pipeline {
         // Build the OpenShift Image in OpenShift and tag it.
 	stage('Build and Tag OpenShift Image') {
             steps{
-                echo "Building OpenShift container image ${appName}:${devTag} in project ${devProject}."
+                echo "Copying files for image ${appName}:${devTag} in project ${devProject}."
 
                 sh """
                 ls target/*
@@ -93,6 +94,31 @@ pipeline {
             }
 	}
 
+        // Build the httpd image and tag it
+        stage('Build httpd Image') {
+            steps {
+                script {
+                    echo "Copying files for httpd container image ${appName}-httpd:${devTag} in project ${devProject}."
+                    sh """
+                    mkdir -p httpd_files
+                    echo 'hello' > httpd_files/hello.txt
+                    """
+
+                    echo "Building Openshift httpd container image ${appName}-httpd:${devTag} in project ${devProject}."
+
+
+                    
+	            openshift.withCluster() {
+	                openshift.withProject("${devProject}") {
+                            def buildConfig = openshift.selector("bc", "${appName}-httpd")
+	            	    def build = buildConfig.startBuild("--from-dir=httpd_files","--wait=true")
+                            openshift.tag("${appName}-httpd:latest", "${appName}-httpd:${devTag}")
+	                }
+	            }
+	        }
+            }
+        }
+        
         stage('Rollout Dev') {
             steps {
                 script {
@@ -119,6 +145,9 @@ pipeline {
                             sleep 1
                             while ( rc == null ) {
                                 try {
+                                    dc = openshift.selector("dc",appName).object()
+                                    dc_version = dc.status.latestVersion
+                                    echo "Version of dc is ${dc_version}"
                                     rc = openshift.selector("rc", "${appName}-${dc_version}").object()
                                     break
                                 } catch( Exception e) {
@@ -129,6 +158,9 @@ pipeline {
 			    echo "Waiting for ReplicationController ${appName}-${dc_version} to be ready"
 			    while (rc.spec.replicas != rc.status.readyReplicas) {
 			        sleep 5
+                                dc = openshift.selector("dc",appName).object()
+                                dc_version = dc.status.latestVersion
+                                echo "Version of dc is ${dc_version}"
 			        rc = openshift.selector("rc", "${appName}-${dc_version}").object()
 			    }
                         }
@@ -136,5 +168,57 @@ pipeline {
                 }
             }
         }
+
+
+
+
+        stage('Rollout Httpd') {
+            steps {
+                script {
+                    openshift.withCluster() {
+		        openshift.withProject("${devProject}") {
+                            echo "Setting container image"
+                            openshift.set("image", "dc/${appName}-httpd", "${appName}-httpd=image-registry.openshift-image-registry.svc:5000/${devProject}/${appName}-httpd:${devTag}")
+                            echo "Finding DC"
+
+                            openshift.selector("dc", "${appName}-httpd").rollout()
+                            echo "Rollout complete"
+
+                            echo "Starting watch"
+                            def dc = openshift.selector("dc","${appName}-httpd").object()
+                            def dc_version = dc.status.latestVersion
+                            echo "Version of dc is ${dc_version}"
+			    def rc = null
+                            echo "Attempting to get rc ${appName}-httpd-${dc_version}"
+                            sleep 1
+                            while ( rc == null ) {
+                                try {
+                                    dc = openshift.selector("dc","${appName}-httpd").object()
+                                    dc_version = dc.status.latestVersion
+                                    echo "Version of dc is ${dc_version}"
+                                    rc = openshift.selector("rc", "${appName}-httpd-${dc_version}").object()
+                                    break
+                                } catch( Exception e) {
+                                    sleep 1
+                                }
+                            }
+
+			    echo "Waiting for ReplicationController ${appName}-httpd-${dc_version} to be ready"
+			    while (rc.spec.replicas != rc.status.readyReplicas) {
+			        sleep 5
+                                dc = openshift.selector("dc","${appName}-httpd").object()
+                                dc_version = dc.status.latestVersion
+                                echo "Version of dc is ${dc_version}"
+			        rc = openshift.selector("rc", "${appName}-httpd-${dc_version}").object()
+			    }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        
     }
 }
