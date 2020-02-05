@@ -14,13 +14,21 @@ spec:
   postCommit: {}
   resources: {}
   runPolicy: Serial
+  source:
+    dockerfile: |
+      FROM httpd:latest
+      RUN /usr/bin/mkdir -p /opt/app-root/src
+      RUN /usr/bin/curl http://nexus-nexus.apps.cluster-ee65.sandbox1895.opentlc.com/repository/demo/test.txt -o /opt/app-root/src/test.txt
+      ENTRYPOINT ["/usr/bin/scl", "enable", "httpd24", "--", "/opt/rh/httpd24/root/usr/sbin/httpd" ]
+      CMD ["-D","FOREGROUND","-f","/etc/httpd/customconf/httpd.conf"]
+    type: Dockerfile
   strategy:
-    sourceStrategy:
+    dockerStrategy:
       from:
         kind: ImageStreamTag
         name: httpd:latest
         namespace: openshift
-    type: Binary
+    type: Dockerfile
   successfulBuildsHistoryLimit: 5
   triggers:
   - generic:
