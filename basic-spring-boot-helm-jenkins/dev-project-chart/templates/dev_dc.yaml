@@ -40,11 +40,27 @@ spec:
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
+        volumeMounts:
+          - name: {{ .Values.projectname }}-tls
+            mountPath: /etc/pki/tls
+            readOnly: true
+          - name: {{ .Values.projectname }}-tls-cabundle
+            mountPath: /etc/pki/cacerts
+            readOnly: true
+      volumes:
+        - name: {{ .Values.projectname }}-tls
+          secret:
+            secretName: {{ .Values.projectname }}-tls
+        - name: {{ .Values.projectname }}-tls-cabundle
+          configMap:
+            name: {{ .Values.projectname }}-tls-cabundle
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
+
+        
   test: false
   triggers:
   - type: ConfigChange

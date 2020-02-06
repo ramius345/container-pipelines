@@ -4,6 +4,8 @@ metadata:
   labels:
     app: {{ .Values.projectname }}-dev
   name: {{ .Values.projectname }}
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: {{ .Values.projectname }}-tls
 spec:
   ports:
   - name: 8080-tcp
