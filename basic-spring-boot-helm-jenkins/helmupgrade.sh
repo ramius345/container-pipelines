@@ -14,6 +14,8 @@ echo "Dev Project: $DEV_PROJECT"
 echo ""
 echo "Your Jenkinsfile (saved to Jenkinsfile, copy to your git project!):"
 
+ORIG_PROJECT=$(oc project | cut -d " " -f 3 | sed 's/"//g')
+
 oc project $JENKINS_PROJECT
 helm upgrade \
      --set projectname=$PROJECTNAME \
@@ -30,4 +32,5 @@ helm upgrade \
      --set git.ref=$BRANCH \
      $PROJECTNAME dev-project-chart
 
+oc project $ORIG_PROJECT
 

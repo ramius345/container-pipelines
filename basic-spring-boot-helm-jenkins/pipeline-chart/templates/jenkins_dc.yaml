@@ -42,6 +42,10 @@ spec:
           value: "false"
         - name: JENKINS_UC_INSECURE
           value: "false"
+        - name: INSTALL_PLUGINS
+          value: "artifactory:3.5.0,hashicorp-vault-plugin:3.1.1"
+        - name: OVERRIDE_PV_PLUGINS_WITH_IMAGE_PLUGINS
+          value: "true"
         image: image-registry.openshift-image-registry.svc:5000/openshift/jenkins@sha256:dd5f1c5d14a8a72aa4ca51224c26a661c2e4f19ea3e5f9b7d8343f4952de5f0d
         imagePullPolicy: IfNotPresent
         livenessProbe:
