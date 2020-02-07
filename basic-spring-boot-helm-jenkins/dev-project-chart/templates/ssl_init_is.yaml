@@ -1,0 +1,9 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: ssl-init-bc
+  name: ssl-init-bc
+spec:
+  lookupPolicy:
+    local: false

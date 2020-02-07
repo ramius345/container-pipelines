@@ -26,6 +26,14 @@ spec:
         deploymentconfig: {{ .Values.projectname }}
         app: {{ .Values.projectname }}
     spec:
+      initContainers:
+      - image: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/ssl-init-bc:latest
+        name: jks-generator
+        volumeMounts:
+          - name: {{ .Values.projectname }}-tls
+            mountPath: /etc/pki/tls
+          - name: {{ .Values.projectname }}-tls-cabundle
+            mountPath: /etc/pki/cacerts
       containers:
       - image: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/{{ .Values.projectname }}:latest
         imagePullPolicy: Always
