@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2020-02-08T22:53:34Z"
+  name: nexus
+  namespace: nexus-test
+  resourceVersion: "562459"
+  selfLink: /api/v1/namespaces/nexus-test/services/nexus
+  uid: a4139cdb-ab46-47aa-9be8-ae2928a7d3cb
+spec:
+  clusterIP: 172.30.229.204
+  ports:
+  - port: 8081
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    run: nexus
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
