@@ -16,7 +16,7 @@ spec:
     dockerfile: |
       FROM registry.access.redhat.com/ubi7/ubi:latest
       RUN /usr/bin/yum install -y openssl java-1.8.0-openjdk-headless
-      CMD ["/bin/bash","-c", "'openssl pkcs12 -export -out /etc/pki/tls/cert.pkcs12 -inkey /etc/pki/tls.key -in /etc/pki/tls.crt  -certfile /etc/pki/cacerts/service-ca.crt -passout pass:changeit && /usr/bin/keytool -importkeystore -srckeystore cert.pkcs12 -srcstoretype pkcs12 -destkeystore /etc/pki/tls/cert.jks -srcstorepass changeit -deststorepass changeit  '" ]
+      CMD ["/bin/sh","-c", "openssl pkcs12 -export -out /etc/jks/cert.pkcs12 -inkey /etc/pki/tls/tls.key -in /etc/pki/tls/tls.crt  -certfile /etc/pki/cacerts/service-ca.crt -passout pass:changeit; /usr/bin/keytool -importkeystore -srckeystore /etc/jks/cert.pkcs12 -srcstoretype pkcs12 -destkeystore /etc/jks/cert.jks -srcstorepass changeit -deststorepass changeit" ]
     type: Dockerfile
   strategy:
     dockerStrategy: {}

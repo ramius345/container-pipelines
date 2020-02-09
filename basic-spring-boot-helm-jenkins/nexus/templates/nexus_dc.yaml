@@ -26,7 +26,7 @@ spec:
         run: nexus
     spec:
       containers:
-      - image: sonatype/nexus3
+      - image: quay.io/tpetersh/demo-nexus:latest
         imagePullPolicy: Always
         name: nexus
         ports:

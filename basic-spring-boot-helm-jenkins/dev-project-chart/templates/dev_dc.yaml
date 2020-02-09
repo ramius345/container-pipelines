@@ -34,6 +34,8 @@ spec:
             mountPath: /etc/pki/tls
           - name: {{ .Values.projectname }}-tls-cabundle
             mountPath: /etc/pki/cacerts
+          - mountPath: /etc/jks
+            name: jks-vol
       containers:
       - image: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/{{ .Values.projectname }}:latest
         imagePullPolicy: Always
@@ -55,6 +57,8 @@ spec:
           - name: {{ .Values.projectname }}-tls-cabundle
             mountPath: /etc/pki/cacerts
             readOnly: true
+          - mountPath: /etc/jks
+            name: jks-vol
       volumes:
         - name: {{ .Values.projectname }}-tls
           secret:
@@ -62,6 +66,9 @@ spec:
         - name: {{ .Values.projectname }}-tls-cabundle
           configMap:
             name: {{ .Values.projectname }}-tls-cabundle
+        - name: jks-vol
+          emptyDir: {}
+
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

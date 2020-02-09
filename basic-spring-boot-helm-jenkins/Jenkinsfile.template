@@ -102,7 +102,7 @@ pipeline {
                     sh """
                     mkdir -p httpd_files
                     echo 'another test' > ${WORKSPACE}/httpd_files/test.txt
-                    curl -v -u admin:r3dh4t1! -k http://nexus-nexus.apps.cluster-ee65.sandbox1895.opentlc.com/repository/demo/test.txt --upload-file ${WORKSPACE}/httpd_files/test.txt
+                    curl -v -u admin:admin123 -k http://nexus.nexus.svc.cluster.local:8081/repository/demo/test.txt --upload-file ${WORKSPACE}/httpd_files/test.txt
                     """
 
                     echo "Building Openshift httpd container image ${appName}-httpd:${devTag} in project ${devProject}."

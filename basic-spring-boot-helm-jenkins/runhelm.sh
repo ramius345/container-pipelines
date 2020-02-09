@@ -29,6 +29,9 @@ helm install \
      pipeline-chart
 
 
+oc new-project nexus
+helm install --name-template nexus nexus
+
 oc new-project $DEV_PROJECT
 helm install \
      --name-template $PROJECTNAME \
